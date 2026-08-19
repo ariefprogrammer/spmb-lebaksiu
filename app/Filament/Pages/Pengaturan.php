@@ -28,6 +28,10 @@ class Pengaturan extends Page implements HasForms
     // Daftar key yang dikelola halaman ini -- tambah di sini kalau perlu field baru.
     public const KEYS = [
         'tahun_ajaran',
+        'profil_tahun_berdiri',
+        'profil_deskripsi',
+        'serbaserbi_persentase_terserap',
+        'serbaserbi_jumlah_mitra',
         'kontak_telepon',
         'kontak_email',
         'kontak_whatsapp_cs',
@@ -67,6 +71,32 @@ class Pengaturan extends Page implements HasForms
                             ->label('Logo Sekolah')
                             ->image()
                             ->directory('pengaturan'),
+                    ])->columns(2),
+
+                Section::make('Profil Sekolah')
+                    ->schema([
+                        TextInput::make('profil_tahun_berdiri')
+                            ->label('Tahun Berdiri')
+                            ->numeric()
+                            ->placeholder('1998'),
+
+                        Textarea::make('profil_deskripsi')
+                            ->label('Deskripsi Profil')
+                            ->rows(4)
+                            ->helperText('Ditampilkan di section "Mengenal Sekolah" pada halaman depan.')
+                            ->columnSpanFull(),
+                    ])->columns(2),
+
+                Section::make('Statistik Serba-serbi SPMB')
+                    ->schema([
+                        TextInput::make('serbaserbi_persentase_terserap')
+                            ->label('Persentase Alumni Terserap Kerja')
+                            ->placeholder('86%')
+                            ->helperText('Angka kurasi manual, tidak dihitung otomatis dari data.'),
+
+                        TextInput::make('serbaserbi_jumlah_mitra')
+                            ->label('Jumlah Perusahaan & Instansi Mitra')
+                            ->placeholder('40+'),
                     ])->columns(2),
 
                 Section::make('Kontak')
