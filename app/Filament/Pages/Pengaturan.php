@@ -25,22 +25,23 @@ class Pengaturan extends Page implements HasForms
 
     protected static string $view = 'filament.pages.pengaturan';
 
-    // Daftar key yang dikelola halaman ini -- tambah di sini kalau perlu field baru.
     public const KEYS = [
         'tahun_ajaran',
-        'profil_tahun_berdiri',
-        'profil_deskripsi',
-        'serbaserbi_persentase_terserap',
-        'serbaserbi_jumlah_mitra',
         'kontak_telepon',
         'kontak_email',
         'kontak_whatsapp_cs',
         'alamat_sekolah',
+        'jam_operasional_weekday',
+        'jam_operasional_sabtu',
         'sosmed_instagram',
         'sosmed_facebook',
         'sosmed_youtube',
         'teks_pengumuman',
         'logo_sekolah',
+        'profil_tahun_berdiri',
+        'profil_deskripsi',
+        'serbaserbi_persentase_terserap',
+        'serbaserbi_jumlah_mitra',
     ];
 
     public ?array $data = [];
@@ -119,6 +120,14 @@ class Pengaturan extends Page implements HasForms
                             ->label('Alamat Sekolah')
                             ->rows(2)
                             ->columnSpanFull(),
+
+                        TextInput::make('jam_operasional_weekday')
+                            ->label('Jam Operasional (Senin-Jumat)')
+                            ->placeholder('Senin – Jumat: 07.00 – 15.00 WIB'),
+
+                        TextInput::make('jam_operasional_sabtu')
+                            ->label('Jam Operasional (Sabtu)')
+                            ->placeholder('Sabtu: 08.00 – 12.00 WIB'),
                     ])->columns(2),
 
                 Section::make('Media Sosial')

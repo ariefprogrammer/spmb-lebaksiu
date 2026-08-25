@@ -15,11 +15,23 @@
 </head>
 <body>
 
+@php
+    $pengaturanKontak = [
+        'telepon' => \App\Models\Pengaturan::get('kontak_telepon', '(0283) 123-4567'),
+        'email' => \App\Models\Pengaturan::get('kontak_email', 'spmb@smkmuh1lebaksiu.sch.id'),
+        'whatsapp_cs' => \App\Models\Pengaturan::get('kontak_whatsapp_cs', '6288219918654'),
+        'alamat' => \App\Models\Pengaturan::get('alamat_sekolah', 'Jl. Raya Lebaksiu, Kab. Tegal, Jawa Tengah'),
+        'instagram' => \App\Models\Pengaturan::get('sosmed_instagram'),
+        'facebook' => \App\Models\Pengaturan::get('sosmed_facebook'),
+        'youtube' => \App\Models\Pengaturan::get('sosmed_youtube'),
+    ];
+@endphp
+
 <div class="topbar">
   <div class="container d-flex justify-content-between align-items-center">
     <div class="d-none d-md-flex gap-3 flex-shrink-0">
-      <a href="tel:+622831234567" class="d-flex align-items-center"><i class="bi bi-telephone-fill me-1"></i>(0283) 123-4567</a>
-      <a href="mailto:spmb@smkmuh1lebaksiu.sch.id" class="d-flex align-items-center"><i class="bi bi-envelope-fill me-1"></i>spmb@smkmuh1lebaksiu.sch.id</a>
+      <a href="tel:{{ preg_replace('/[^0-9+]/', '', $pengaturanKontak['telepon']) }}" class="d-flex align-items-center"><i class="bi bi-telephone-fill me-1"></i>{{ $pengaturanKontak['telepon'] }}</a>
+      <a href="mailto:{{ $pengaturanKontak['email'] }}" class="d-flex align-items-center"><i class="bi bi-envelope-fill me-1"></i>{{ $pengaturanKontak['email'] }}</a>
     </div>
     <div class="w-100 text-center text-md-end">
       <i class="bi bi-megaphone-fill me-1 text-warning"></i>
@@ -50,27 +62,28 @@
           <a class="nav-link nav-link-custom{{ request()->routeIs('home') ? ' active' : '' }}" href="{{ route('home') }}">Home</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Informasi</a>
+          <a class="nav-link nav-link-custom dropdown-toggle{{ request()->routeIs('pages.show') ? ' active' : '' }}" href="#" data-bs-toggle="dropdown">Informasi</a>
           <ul class="dropdown-menu">
             @foreach(\App\Models\Page::menu()->get() as $p)
-              <li><a class="dropdown-item" href="#">{{ $p->title }}</a></li>
+              <li><a class="dropdown-item{{ request('slug') === $p->slug ? ' active' : '' }}" href="{{ route('pages.show', $p->slug) }}">{{ $p->title }}</a></li>
             @endforeach
           </ul>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link nav-link-custom dropdown-toggle" href="#" data-bs-toggle="dropdown">Pendaftaran</a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Isi Formulir</a></li>
-            <li><a class="dropdown-item" href="#">Konfirmasi Transfer</a></li>
+            <li><a class="dropdown-item" href="{{ route('formulir-pendaftaran.create') }}">Isi Formulir</a></li>
+            <li><a class="dropdown-item" href="{{ route('konfirmasi-transfer.create') }}">Konfirmasi Transfer</a></li>
+            <li><a class="dropdown-item" href="{{ route('cek-status.index') }}">Cek Status</a></li>
           </ul>
         </li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="#">Guru</a></li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="#">Galeri</a></li>
-        <li class="nav-item"><a class="nav-link nav-link-custom" href="#">Kontak</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom{{ request()->routeIs('guru.index') ? ' active' : '' }}" href="{{ route('guru.index') }}">Guru</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom{{ request()->routeIs('galeri.index') ? ' active' : '' }}" href="{{ route('galeri.index') }}">Galeri</a></li>
+        <li class="nav-item"><a class="nav-link nav-link-custom{{ request()->routeIs('kontak.index') ? ' active' : '' }}" href="{{ route('kontak.index') }}">Kontak</a></li>
       </ul>
       <div class="d-flex gap-2">
         <a href="#" class="btn btn-login">Login</a>
-        <a href="#" class="btn btn-daftar">Daftar Sekarang</a>
+        <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar">Daftar Sekarang</a>
       </div>
     </div>
   </div>
@@ -88,35 +101,35 @@
         </div>
         <p class="small">Mencetak generasi terampil, mandiri, dan berakhlak mulia melalui pendidikan kejuruan berkualitas.</p>
         <div class="d-flex gap-2 mt-3">
-          <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="footer-social"><i class="bi bi-youtube"></i></a>
-          <a href="#" class="footer-social"><i class="bi bi-whatsapp"></i></a>
+          <a href="{{ $pengaturanKontak['instagram'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-instagram"></i></a>
+          <a href="{{ $pengaturanKontak['facebook'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-facebook"></i></a>
+          <a href="{{ $pengaturanKontak['youtube'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-youtube"></i></a>
+          <a href="https://wa.me/{{ $pengaturanKontak['whatsapp_cs'] }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-whatsapp"></i></a>
         </div>
       </div>
       <div class="col-lg-2 col-6">
         <h6>Tautan</h6>
         <ul>
           <li><a href="{{ route('home') }}">Home</a></li>
-          <li><a href="#">Galeri</a></li>
-          <li><a href="#">Pendaftaran</a></li>
-          <li><a href="#">Kontak</a></li>
+          <li><a href="{{ route('galeri.index') }}">Galeri</a></li>
+          <li><a href="{{ route('formulir-pendaftaran.create') }}">Pendaftaran</a></li>
+          <li><a href="{{ route('kontak.index') }}">Kontak</a></li>
         </ul>
       </div>
       <div class="col-lg-3 col-6">
         <h6>Informasi SPMB</h6>
         <ul>
           @foreach(\App\Models\Page::menu()->get() as $p)
-            <li><a href="#">{{ $p->title }}</a></li>
+            <li><a href="{{ route('pages.show', $p->slug) }}">{{ $p->title }}</a></li>
           @endforeach
         </ul>
       </div>
       <div class="col-lg-3">
         <h6>Kontak Panitia</h6>
         <ul>
-          <li><i class="bi bi-geo-alt-fill me-2"></i>Jl. Raya Lebaksiu, Kab. Tegal, Jawa Tengah</li>
-          <li><i class="bi bi-telephone-fill me-2"></i>(0283) 123-4567</li>
-          <li><i class="bi bi-envelope-fill me-2"></i>spmb@smkmuh1lebaksiu.sch.id</li>
+          <li><i class="bi bi-geo-alt-fill me-2"></i>{{ $pengaturanKontak['alamat'] }}</li>
+          <li><i class="bi bi-telephone-fill me-2"></i>{{ $pengaturanKontak['telepon'] }}</li>
+          <li><i class="bi bi-envelope-fill me-2"></i>{{ $pengaturanKontak['email'] }}</li>
         </ul>
       </div>
     </div>

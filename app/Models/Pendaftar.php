@@ -58,6 +58,7 @@ class Pendaftar extends Model
         'status_verifikasi_berkas',
         'hasil_seleksi',
         'catatan_admin',
+        'daftar_ulang_at',
     ];
 
     protected function casts(): array
@@ -66,6 +67,7 @@ class Pendaftar extends Model
             'tanggal_lahir' => 'date',
             'anak_ke' => 'integer',
             'punya_kip' => 'boolean',
+            'daftar_ulang_at' => 'datetime',
         ];
     }
 
@@ -94,13 +96,37 @@ class Pendaftar extends Model
         return $this->hasMany(Pembayaran::class);
     }
 
-    /**
-     * Bukti transfer paling baru yang diunggah pendaftar -- dipakai halaman
-     * Cek Status & Filament untuk menampilkan status transaksi terkini,
-     * mengingat satu pendaftar bisa mengunggah ulang bukti transfer.
-     */
     public function pembayaranTerbaru(): HasOne
     {
         return $this->hasOne(Pembayaran::class)->latestOfMany();
+    }
+
+    public function catatanUntukPendaftar(): string
+    {
+        if (! empty($this->catatan_admin)) {
+            return $this->catatan_admin;
+        }
+
+        if ($this->hasil_seleksi === 'diterima') {
+            return 'Selamat! Kamu dinyatakan diterima. Silakan tunggu informasi jadwal daftar ulang dari panitia.';
+        }
+
+        if ($this->hasil_seleksi === 'ditolak') {
+            return 'Mohon maaf, kamu belum berhasil pada seleksi kali ini. Terima kasih atas partisipasimu.';
+        }
+
+        if ($this->status_pembayaran === 'terverifikasi' && $this->status_verifikasi_berkas === 'terverifikasi') {
+            return 'Pembayaran dan berkas kamu sudah terverifikasi. Tunggu pengumuman hasil seleksi ya.';
+        }
+
+        if (in_array($this->status_pembayaran, ['menunggu_verifikasi'], true)) {
+            return 'Silahkan upload bukti transfer untuk diverifikasi oleh panitia, maksimal 2x24 jam kerja.';
+        }
+
+        if (in_array($this->status_pembayaran, ['terverifikasi'], true)) {
+            return 'Bukti transfer sudah terverifikasi dan sedang proses verifikasi berkas.';
+        }
+
+        return 'Formulir kamu sudah kami terima. Segera lakukan pembayaran dan konfirmasi transfer agar proses verifikasi bisa dilanjutkan.';
     }
 }

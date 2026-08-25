@@ -18,7 +18,7 @@
         <h1 class="mt-3 mb-3">Wujudkan Masa Depanmu di SMK Muhammadiyah Lebaksiu</h1>
         <p class="lead-text mb-4">Daftar jadi siswa baru cukup dari rumah. Isi formulir, unggah berkas, dan pantau status pendaftaranmu secara online &mdash; semua dalam satu tempat.</p>
         <div class="d-flex flex-wrap gap-3">
-          <a href="#" class="btn btn-daftar btn-lg"><i class="bi bi-pencil-square me-1"></i> Daftar Sekarang</a>
+          <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar btn-lg"><i class="bi bi-pencil-square me-1"></i> Daftar Sekarang</a>
           <a href="#" class="btn btn-outline-light btn-lg" style="border-radius:10px;"><i class="bi bi-book me-1"></i> Panduan Pengisian</a>
         </div>
       </div>
@@ -33,21 +33,21 @@
   <div class="quick-access">
     <div class="row g-2 g-md-3">
       <div class="col-6 col-md-3">
-        <a href="#" class="qa-item">
+        <a href="{{ route('formulir-pendaftaran.create') }}" class="qa-item">
           <span class="qa-icon"><i class="bi bi-file-earmark-text"></i></span>
           <span>Isi Formulir</span>
           <small>Data calon siswa</small>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="#" class="qa-item">
+        <a href="{{ route('konfirmasi-transfer.create') }}" class="qa-item">
           <span class="qa-icon"><i class="bi bi-receipt"></i></span>
           <span>Konfirmasi Transfer</span>
           <small>Unggah bukti bayar</small>
         </a>
       </div>
       <div class="col-6 col-md-3">
-        <a href="#" class="qa-item">
+        <a href="{{ route('cek-status.index') }}" class="qa-item">
           <span class="qa-icon"><i class="bi bi-search"></i></span>
           <span>Cek Status</span>
           <small>Lacak pendaftaran</small>
@@ -176,7 +176,7 @@
       @endif
 
       <div class="text-center mt-4 position-relative" style="z-index:1;">
-        <a href="#" class="btn btn-daftar">
+        <a href="{{ route('galeri.index') }}" class="btn btn-daftar">
           <i class="bi bi-images me-1"></i> Lihat Galeri Lengkap
         </a>
       </div>
@@ -235,7 +235,7 @@
             </ul>
           @endif
           @if($g->status_periode === 'open')
-            <a href="#" class="btn btn-daftar w-100">Daftar {{ $g->nama }}</a>
+            <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar w-100">Daftar {{ $g->nama }}</a>
           @else
             <button class="btn btn-outline-secondary w-100" disabled>
               {{ $g->status_periode === 'closed' ? 'Sudah Berakhir' : 'Belum Dibuka' }}
@@ -271,7 +271,7 @@
     </div>
 
     <div class="text-center mt-5">
-      <a href="#" class="btn btn-daftar btn-lg">
+      <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar btn-lg">
         <i class="bi bi-pencil-square me-1"></i> Mulai Isi Formulir
       </a>
     </div>
@@ -339,16 +339,6 @@
 </section>
 @endif
 
-<section class="pt-0">
-  <div class="container">
-    <div class="cta-banner d-flex flex-wrap justify-content-between align-items-center gap-3">
-      <div>
-        <h3 class="mb-2">{{ $gelombangAktif ? "Kuota {$gelombangAktif->nama} Terbatas!" : 'Pendaftaran Segera Dibuka' }}</h3>
-        <p class="mb-0">Amankan tempatmu sekarang sebelum kuota jurusan favorit penuh.</p>
-      </div>
-      <a href="#" class="btn btn-cta-dark">Daftar Sekarang <i class="bi bi-arrow-right ms-1"></i></a>
-    </div>
-  </div>
-</section>
+@include('partials.cta')
 
 @endsection

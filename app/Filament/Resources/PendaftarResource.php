@@ -336,6 +336,10 @@ class PendaftarResource extends Resource
                     ->boolean()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                IconColumn::make('daftar_ulang_at')
+                    ->label('Daftar Ulang')
+                    ->boolean(),
+
                 TextColumn::make('created_at')
                     ->label('Tgl Daftar')
                     ->date('d M Y')
@@ -362,6 +366,16 @@ class PendaftarResource extends Resource
 
                 TernaryFilter::make('punya_kip')
                     ->label('Memiliki KIP'),
+
+                TernaryFilter::make('daftar_ulang_at')
+                    ->label('Status Daftar Ulang')
+                    ->nullable()
+                    ->trueLabel('Sudah Daftar Ulang')
+                    ->falseLabel('Belum Daftar Ulang')
+                    ->queries(
+                        true: fn ($query) => $query->whereNotNull('daftar_ulang_at'),
+                        false: fn ($query) => $query->whereNull('daftar_ulang_at'),
+                    ),
             ])
             ->actions([
                 Action::make('verifikasiBerkas')
@@ -433,6 +447,22 @@ class PendaftarResource extends Resource
 
                         Notification::make()
                             ->title('Hasil seleksi tersimpan')
+                            ->success()
+                            ->send();
+                    }),
+
+                Action::make('tandaiDaftarUlang')
+                    ->label('Tandai Daftar Ulang')
+                    ->icon('heroicon-o-clipboard-document-check')
+                    ->color('success')
+                    ->visible(fn (Pendaftar $record) => $record->hasil_seleksi === 'diterima' && is_null($record->daftar_ulang_at))
+                    ->requiresConfirmation()
+                    ->modalDescription('Tandai pendaftar ini sudah menyelesaikan daftar ulang?')
+                    ->action(function (Pendaftar $record) {
+                        $record->update(['daftar_ulang_at' => now()]);
+
+                        Notification::make()
+                            ->title('Pendaftar ditandai sudah daftar ulang')
                             ->success()
                             ->send();
                     }),

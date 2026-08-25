@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -49,5 +50,16 @@ class Gelombang extends Model
 
         return $this->tanggal_mulai->toDateString() <= $today
             && $this->tanggal_selesai->toDateString() >= $today;
+    }
+
+    /**
+     * Scope untuk mengambil gelombang yang tanggalnya sedang berjalan hari ini.
+     */
+    public function scopeAktif(Builder $query): Builder
+    {
+        $today = now()->toDateString();
+
+        return $query->where('tanggal_mulai', '<=', $today)
+            ->where('tanggal_selesai', '>=', $today);
     }
 }
