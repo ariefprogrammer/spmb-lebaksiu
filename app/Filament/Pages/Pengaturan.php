@@ -34,7 +34,7 @@ class Pengaturan extends Page implements HasForms
         'jam_operasional_weekday',
         'jam_operasional_sabtu',
         'sosmed_instagram',
-        'sosmed_facebook',
+        'sosmed_tiktok',
         'sosmed_youtube',
         'teks_pengumuman',
         'logo_sekolah',
@@ -137,8 +137,8 @@ class Pengaturan extends Page implements HasForms
                             ->url()
                             ->placeholder('https://instagram.com/...'),
 
-                        TextInput::make('sosmed_facebook')
-                            ->label('Facebook')
+                        TextInput::make('sosmed_tiktok')
+                            ->label('Tiktok')
                             ->url(),
 
                         TextInput::make('sosmed_youtube')

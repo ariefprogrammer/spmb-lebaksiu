@@ -22,7 +22,7 @@
         'whatsapp_cs' => \App\Models\Pengaturan::get('kontak_whatsapp_cs', '6288219918654'),
         'alamat' => \App\Models\Pengaturan::get('alamat_sekolah', 'Jl. Raya Lebaksiu, Kab. Tegal, Jawa Tengah'),
         'instagram' => \App\Models\Pengaturan::get('sosmed_instagram'),
-        'facebook' => \App\Models\Pengaturan::get('sosmed_facebook'),
+        'tiktok' => \App\Models\Pengaturan::get('sosmed_tiktok'),
         'youtube' => \App\Models\Pengaturan::get('sosmed_youtube'),
     ];
 @endphp
@@ -101,7 +101,7 @@
         <p class="small">Mencetak generasi terampil, mandiri, dan berakhlak mulia melalui pendidikan kejuruan berkualitas.</p>
         <div class="d-flex gap-2 mt-3">
           <a href="{{ $pengaturanKontak['instagram'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-instagram"></i></a>
-          <a href="{{ $pengaturanKontak['facebook'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-facebook"></i></a>
+          <a href="{{ $pengaturanKontak['tiktok'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-tiktok"></i></a>
           <a href="{{ $pengaturanKontak['youtube'] ?: '#' }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-youtube"></i></a>
           <a href="https://wa.me/{{ $pengaturanKontak['whatsapp_cs'] }}" target="_blank" rel="noopener" class="footer-social"><i class="bi bi-whatsapp"></i></a>
         </div>
