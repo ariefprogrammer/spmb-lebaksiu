@@ -81,8 +81,7 @@
         <li class="nav-item"><a class="nav-link nav-link-custom{{ request()->routeIs('galeri.index') ? ' active' : '' }}" href="{{ route('galeri.index') }}">Galeri</a></li>
         <li class="nav-item"><a class="nav-link nav-link-custom{{ request()->routeIs('kontak.index') ? ' active' : '' }}" href="{{ route('kontak.index') }}">Kontak</a></li>
       </ul>
-      <div class="d-flex gap-2">
-        <a href="#" class="btn btn-login">Login</a>
+      <div class="d-flex gap-2">        
         <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar">Daftar Sekarang</a>
       </div>
     </div>
