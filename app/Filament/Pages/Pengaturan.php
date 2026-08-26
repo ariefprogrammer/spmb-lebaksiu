@@ -27,6 +27,10 @@ class Pengaturan extends Page implements HasForms
 
     public const KEYS = [
         'tahun_ajaran',
+        'hero_heading',
+        'hero_paragraf',
+        'hero_link_panduan',
+        'hero_gambar_ilustrasi',
         'kontak_telepon',
         'kontak_email',
         'kontak_whatsapp_cs',
@@ -72,6 +76,33 @@ class Pengaturan extends Page implements HasForms
                             ->label('Logo Sekolah')
                             ->image()
                             ->directory('pengaturan'),
+                    ])->columns(2),
+
+                Section::make('Hero (Halaman Utama)')
+                    ->description('Konten pada bagian paling atas halaman depan (headline besar beserta ilustrasinya).')
+                    ->schema([
+                        TextInput::make('hero_heading')
+                            ->label('Judul Utama (Headline)')
+                            ->placeholder('Wujudkan Masa Depanmu di SMK Muhammadiyah Lebaksiu')
+                            ->columnSpanFull(),
+
+                        Textarea::make('hero_paragraf')
+                            ->label('Paragraf Pengantar')
+                            ->rows(3)
+                            ->placeholder('Daftar jadi siswa baru cukup dari rumah. Isi formulir, unggah berkas, dan pantau status pendaftaranmu secara online.')
+                            ->columnSpanFull(),
+
+                        TextInput::make('hero_link_panduan')
+                            ->label('Link Panduan Pengisian')
+                            ->url()
+                            ->placeholder('https://... (link PDF/dokumen panduan)')
+                            ->helperText('Kosongkan jika belum ada dokumen panduan — tombol "Panduan Pengisian" otomatis disembunyikan.'),
+
+                        FileUpload::make('hero_gambar_ilustrasi')
+                            ->label('Gambar Ilustrasi Siswa')
+                            ->image()
+                            ->directory('pengaturan')
+                            ->helperText('Ditampilkan di sisi kanan bagian hero halaman depan.'),
                     ])->columns(2),
 
                 Section::make('Profil Sekolah')

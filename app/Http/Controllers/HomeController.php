@@ -11,6 +11,7 @@ use App\Models\Jurusan;
 use App\Models\Testimoni;
 use App\Models\Pengaturan;
 use App\Models\Pendaftar;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class HomeController extends Controller
@@ -39,6 +40,12 @@ class HomeController extends Controller
 
         $gelombangAktif = $gelombangList->firstWhere('status_periode', 'open');
 
+        $heroHeading = Pengaturan::get('hero_heading', 'Wujudkan Masa Depanmu di SMK Muhammadiyah Lebaksiu');
+        $heroParagraf = Pengaturan::get('hero_paragraf', 'Daftar jadi siswa baru cukup dari rumah. Isi formulir, unggah berkas, dan pantau status pendaftaranmu secara online — semua dalam satu tempat.');
+        $heroLinkPanduan = Pengaturan::get('hero_link_panduan');
+        $heroGambarPath = Pengaturan::get('hero_gambar_ilustrasi');
+        $heroGambarUrl = $heroGambarPath ? Storage::disk('public')->url($heroGambarPath) : asset('siswa.png');
+
         $profilTahunBerdiri = Pengaturan::get('profil_tahun_berdiri', '1998');
         $profilDeskripsi = Pengaturan::get('profil_deskripsi', 'SMK Muhammadiyah Lebaksiu berkomitmen mencetak lulusan yang terampil, mandiri, dan siap kerja.');
         $totalPendaftar = Pendaftar::count();
@@ -66,6 +73,10 @@ class HomeController extends Controller
             'jurusanList',
             'testimoniList',
             'gelombangAktif',
+            'heroHeading',
+            'heroParagraf',
+            'heroLinkPanduan',
+            'heroGambarUrl',
             'profilTahunBerdiri',
             'profilDeskripsi',
             'totalPendaftar',

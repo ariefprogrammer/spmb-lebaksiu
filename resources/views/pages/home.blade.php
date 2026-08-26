@@ -13,17 +13,19 @@
       <div class="col-lg-6">
         <span class="hero-badge mb-3">
           <i class="bi bi-stars"></i>
-          {{ $gelombangAktif->nama ?? 'Pendaftaran' }} Tahun Ajaran 2027/2028
+          {{ $gelombangAktif->nama ?? 'Pendaftaran' }} Tahun Ajaran {{ \App\Models\Pengaturan::get('tahun_ajaran', '2027/2028') }}
         </span>
-        <h1 class="mt-3 mb-3">Wujudkan Masa Depanmu di SMK Muhammadiyah Lebaksiu</h1>
-        <p class="lead-text mb-4">Daftar jadi siswa baru cukup dari rumah. Isi formulir, unggah berkas, dan pantau status pendaftaranmu secara online &mdash; semua dalam satu tempat.</p>
+        <h1 class="mt-3 mb-3">{{ $heroHeading }}</h1>
+        <p class="lead-text mb-4">{{ $heroParagraf }}</p>
         <div class="d-flex flex-wrap gap-3">
           <a href="{{ route('formulir-pendaftaran.create') }}" class="btn btn-daftar btn-lg"><i class="bi bi-pencil-square me-1"></i> Daftar Sekarang</a>
-          <a href="#" class="btn btn-outline-light btn-lg" style="border-radius:10px;"><i class="bi bi-book me-1"></i> Panduan Pengisian</a>
+          @if($heroLinkPanduan)
+            <a href="{{ $heroLinkPanduan }}" target="_blank" rel="noopener" class="btn btn-outline-light btn-lg" style="border-radius:10px;"><i class="bi bi-book me-1"></i> Panduan Pengisian</a>
+          @endif
         </div>
       </div>
       <div class="col-lg-6 d-none d-lg-block">
-        <img src="{{ asset('siswa.png') }}" class="hero-illustration" alt="Ilustrasi siswa SMK Muhammadiyah Lebaksiu">
+        <img src="{{ $heroGambarUrl }}" class="hero-illustration" alt="Ilustrasi siswa SMK Muhammadiyah Lebaksiu">
       </div>
     </div>
   </div>
