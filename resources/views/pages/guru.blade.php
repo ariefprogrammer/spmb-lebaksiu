@@ -55,10 +55,10 @@
             <div class="guru-body">
               <div class="guru-name">{{ $guru->nama }}</div>
               <span class="guru-mapel">{{ $guru->mapel }}</span>
-              <div class="guru-social">
+              <!-- <div class="guru-social">
                 <a href="#" aria-label="Email"><i class="bi bi-envelope-fill"></i></a>
                 <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

@@ -137,26 +137,20 @@
       <div class="hero-shape s1"></div>
       <div class="hero-shape s2"></div>
 
-      <div class="row g-4 position-relative" style="z-index:1;">
-        <div class="col-6 col-md-3">
-          <div class="serbaserbi-stat">
-            <div class="serbaserbi-stat-num">{{ number_format($totalPendaftar, 0, ',', '.') }}</div>
-            <div class="serbaserbi-stat-label">Pendaftar SPMB {{ now()->year }}</div>
-          </div>
-        </div>
-        <div class="col-6 col-md-3">
+      <div class="row g-4 position-relative" style="z-index:1;">        
+        <div class="col-6 col-md-4 text-center">
           <div class="serbaserbi-stat">
             <div class="serbaserbi-stat-num">{{ $jurusanList->count() }}</div>
             <div class="serbaserbi-stat-label">Program Studi Dibuka</div>
           </div>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4 text-center">
           <div class="serbaserbi-stat">
             <div class="serbaserbi-stat-num">{{ $persentaseTerserap }}</div>
             <div class="serbaserbi-stat-label">Alumni Terserap Kerja</div>
           </div>
         </div>
-        <div class="col-6 col-md-3">
+        <div class="col-6 col-md-4 text-center">
           <div class="serbaserbi-stat">
             <div class="serbaserbi-stat-num">{{ $jumlahMitra }}</div>
             <div class="serbaserbi-stat-label">Perusahaan &amp; Instansi Mitra</div>
