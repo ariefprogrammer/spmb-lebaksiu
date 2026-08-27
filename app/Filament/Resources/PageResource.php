@@ -20,6 +20,8 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
+use FilamentTiptapEditor\TiptapEditor;
+
 class PageResource extends Resource
 {
     protected static ?string $model = Page::class;
@@ -62,8 +64,13 @@ class PageResource extends Resource
                         ->helperText('Ditampilkan di kartu/menu dropdown Informasi.')
                         ->columnSpanFull(),
 
-                    RichEditor::make('content')
+                    TiptapEditor::make('content')
                         ->label('Isi Halaman')
+                        ->profile('default')
+                        ->tools([
+                            'heading', 'bullet-list', 'ordered-list', 'bold', 'italic', 
+                            'strike', 'link', 'media', 'table', 'blockquote', 'hr', 'undo', 'redo'
+                        ])
                         ->required()
                         ->columnSpanFull(),
                 ])->columns(2),
