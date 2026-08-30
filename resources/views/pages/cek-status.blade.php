@@ -133,6 +133,12 @@ $fillPercent = $totalSteps > 1 ? (($highlightCount - 1) / ($totalSteps - 1)) * 1
                 <i class="bi bi-credit-card-2-front-fill me-1"></i> Konfirmasi Pembayaran Sekarang
               </a>
             @endif
+
+            @if($hasil->hasil_seleksi === 'diterima' && $hasil->catatan_link)
+              <a href="{{ $hasil->catatan_link }}" target="_blank" rel="noopener" class="btn btn-daftar w-100 mt-3">
+                <i class="bi bi-whatsapp me-1"></i> Join Grup WhatsApp Siswa Diterima
+              </a>
+            @endif
           </div>
         @endif
 

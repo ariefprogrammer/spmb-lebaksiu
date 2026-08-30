@@ -58,6 +58,7 @@ class Pendaftar extends Model
         'status_verifikasi_berkas',
         'hasil_seleksi',
         'catatan_admin',
+        'catatan_link',
         'daftar_ulang_at',
     ];
 
@@ -108,7 +109,9 @@ class Pendaftar extends Model
         }
 
         if ($this->hasil_seleksi === 'diterima') {
-            return 'Selamat! Kamu dinyatakan diterima. Silakan tunggu informasi jadwal daftar ulang dari panitia.';
+            return $this->catatan_link
+                ? 'Selamat! Kamu dinyatakan diterima. Silakan join grup WhatsApp di bawah ini untuk informasi daftar ulang selanjutnya.'
+                : 'Selamat! Kamu dinyatakan diterima. Silakan tunggu informasi jadwal daftar ulang dari panitia.';
         }
 
         if ($this->hasil_seleksi === 'ditolak') {

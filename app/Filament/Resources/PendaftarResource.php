@@ -266,6 +266,13 @@ class PendaftarResource extends Resource
                         ->label('Catatan Panitia')
                         ->helperText('Ditampilkan ke pendaftar di halaman Cek Status.')
                         ->columnSpanFull(),
+                    
+                    TextInput::make('catatan_link')
+                        ->label('Link Grup WhatsApp')
+                        ->url()
+                        ->placeholder('https://chat.whatsapp.com/...')
+                        ->helperText('Link undangan grup WhatsApp untuk pendaftar yang diterima.')
+                        ->columnSpanFull(),
                 ])
                 ->columns(3),
         ]);
@@ -432,16 +439,24 @@ class PendaftarResource extends Resource
                                 'diterima' => 'Diterima',
                                 'ditolak' => 'Ditolak',
                             ])
+                            ->live()
                             ->required(),
                         Textarea::make('catatan_admin')
                             ->label('Catatan untuk Pendaftar')
                             ->helperText('Muncul di halaman Cek Status, mis. instruksi daftar ulang.'),
+                        TextInput::make('catatan_link')
+                            ->label('Link Grup WhatsApp')
+                            ->url()
+                            ->placeholder('https://chat.whatsapp.com/...')
+                            ->helperText('Dikirim/ditampilkan ke pendaftar yang diterima untuk join grup WhatsApp.')
+                            ->visible(fn ($get) => $get('hasil_seleksi') === 'diterima'),
                     ])
                     ->action(function (Pendaftar $record, array $data) {
                         DB::transaction(function () use ($record, $data) {
                             $record->update([
                                 'hasil_seleksi' => $data['hasil_seleksi'],
                                 'catatan_admin' => $data['catatan_admin'] ?? $record->catatan_admin,
+                                'catatan_link' => $data['catatan_link'] ?? $record->catatan_link,
                             ]);
                         });
 
