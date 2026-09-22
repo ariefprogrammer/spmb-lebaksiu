@@ -11,6 +11,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ asset('css/site.css') }}">
+
+<link rel="canonical" href="@yield('canonical', url()->current())">
+<link rel="icon" type="image/jpeg" href="{{ asset('logo.jpeg') }}">
+<meta property="og:title" content="@yield('title', 'SPMB SMK Muhammadiyah Lebaksiu')">
+<meta property="og:description" content="@yield('meta_description', 'Sistem Penerimaan Murid Baru (SPMB) SMK Muhammadiyah Lebaksiu secara online.')">
+<meta property="og:image" content="@yield('og_image', asset('images/og-default.jpg'))">
+<meta property="og:url" content="{{ url()->current() }}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="id_ID">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   .page-content img {
     max-width: 100%;
