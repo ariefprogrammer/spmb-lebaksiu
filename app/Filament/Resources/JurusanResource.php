@@ -77,6 +77,14 @@ class JurusanResource extends Resource
                 ->searchable()
                 ->nullable(),
 
+            Select::make('galeri_kategori_id')
+                ->label('Kategori Galeri')
+                ->relationship('galeriKategori', 'nama')
+                ->searchable()
+                ->preload()
+                ->nullable()
+                ->helperText('Card jurusan di halaman depan akan mengarah ke galeri dengan kategori ini. Kosongkan jika tidak ingin ada link.'),
+
             FileUpload::make('foto')
                 ->image()
                 ->directory('jurusan')
@@ -112,6 +120,11 @@ class JurusanResource extends Resource
                     }),
                 TextColumn::make('kaprodi.nama')
                     ->label('Kaprodi')
+                    ->placeholder('-'),
+                TextColumn::make('galeriKategori.nama')
+                    ->label('Kategori Galeri')
+                    ->badge()
+                    ->color('gray')
                     ->placeholder('-'),
                 TextColumn::make('guru_count')
                     ->label('Jumlah Guru')

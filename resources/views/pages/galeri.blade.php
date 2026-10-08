@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Galeri - SPMB SMK Muhammadiyah Lebaksiu')
-@section('meta_description', 'Dokumentasi kegiatan belajar, ekstrakurikuler, fasilitas, prestasi, dan acara sekolah SMK Muhammadiyah Lebaksiu.')
+@section('title', ($kategoriAktif ? 'Galeri ' . $kategoriAktif->nama : 'Galeri') . ' - SPMB SMK Muhammadiyah Lebaksiu')
+@section('meta_description', $kategoriAktif
+    ? 'Dokumentasi kategori ' . $kategoriAktif->nama . ' SMK Muhammadiyah Lebaksiu.'
+    : 'Dokumentasi kegiatan belajar, ekstrakurikuler, fasilitas, prestasi, dan acara sekolah SMK Muhammadiyah Lebaksiu.')
 
 @section('content')
 
@@ -25,10 +27,18 @@
       <p class="section-sub mx-auto">Klik salah satu foto untuk melihat tampilan lebih besar.</p>
     </div>
 
-    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" id="filterGaleri">
-      <button type="button" class="filter-chip active" data-filter="semua">Semua</button>
+    {{-- Filter kategori: berupa link agar bisa disalin/dibagikan --}}
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" id="filterGaleri"
+         data-aktif="{{ $kategoriAktif->slug ?? 'semua' }}">
+      <a href="{{ request()->url() }}"
+         class="filter-chip {{ $kategoriAktif ? '' : 'active' }}"
+         style="text-decoration:none;"
+         data-filter="semua">Semua</a>
       @foreach($kategoriList as $kategori)
-        <button type="button" class="filter-chip" data-filter="{{ $kategori->slug }}">{{ $kategori->nama }}</button>
+        <a href="{{ request()->url() }}?kategori={{ $kategori->slug }}"
+           class="filter-chip {{ $kategoriAktif && $kategoriAktif->slug === $kategori->slug ? 'active' : '' }}"
+           style="text-decoration:none;"
+           data-filter="{{ $kategori->slug }}">{{ $kategori->nama }}</a>
       @endforeach
     </div>
 
@@ -36,8 +46,10 @@
       @foreach($galeriList as $item)
         @php
           $fotoUrl = \Illuminate\Support\Facades\Storage::disk('public')->url($item->foto);
+          $sembunyi = $kategoriAktif && $item->kategori->slug !== $kategoriAktif->slug;
         @endphp
         <div class="galeri-item"
+             @if($sembunyi) style="display:none;" @endif
              data-kategori="{{ $item->kategori->slug }}"
              data-bs-toggle="modal"
              data-bs-target="#galeriModal"
@@ -81,27 +93,48 @@
 @push('scripts')
 <script>
   (function () {
+    var wrapper = document.getElementById('filterGaleri');
     var chips = document.querySelectorAll('#filterGaleri .filter-chip');
     var items = document.querySelectorAll('#gridGaleri .galeri-item');
     var empty = document.getElementById('emptyGaleri');
 
+    // ---------- Filter kategori ----------
+    function terapkanFilter(filter) {
+      var visibleCount = 0;
+
+      chips.forEach(function (c) {
+        c.classList.toggle('active', c.getAttribute('data-filter') === filter);
+      });
+
+      items.forEach(function (item) {
+        var match = filter === 'semua' || item.getAttribute('data-kategori') === filter;
+        item.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      empty.classList.toggle('d-none', visibleCount > 0);
+    }
+
+    function urlUntuk(filter) {
+      var url = new URL(window.location.href);
+      if (filter === 'semua') {
+        url.searchParams.delete('kategori');
+      } else {
+        url.searchParams.set('kategori', filter);
+      }
+      return url.toString();
+    }
+
     chips.forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        chips.forEach(function (c) { c.classList.remove('active'); });
-        chip.classList.add('active');
-
+      chip.addEventListener('click', function (e) {
+        e.preventDefault();
         var filter = chip.getAttribute('data-filter');
-        var visibleCount = 0;
-
-        items.forEach(function (item) {
-          var match = filter === 'semua' || item.getAttribute('data-kategori') === filter;
-          item.style.display = match ? '' : 'none';
-          if (match) visibleCount++;
-        });
-
-        empty.classList.toggle('d-none', visibleCount > 0);
+        terapkanFilter(filter);
+        history.replaceState(null, '', urlUntuk(filter));
       });
     });
+
+    terapkanFilter(wrapper.getAttribute('data-aktif'));
 
     var galeriModal = document.getElementById('galeriModal');
     galeriModal.addEventListener('show.bs.modal', function (event) {

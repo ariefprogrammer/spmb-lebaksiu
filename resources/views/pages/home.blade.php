@@ -119,6 +119,12 @@
                                 @endforeach
                                 </ul>
                             @endif
+                            @if($jurusan->galeriKategori)
+                                <a href="{{ route('galeri.index', ['kategori' => $jurusan->galeriKategori->slug]) }}"
+                                  class="btn btn-sm btn-outline-primary mt-3">
+                                    <i class="bi bi-images me-1"></i> Lihat Galeri
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

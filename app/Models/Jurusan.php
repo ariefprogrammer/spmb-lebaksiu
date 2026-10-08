@@ -22,6 +22,7 @@ class Jurusan extends Model
         'foto',
         'akreditasi',
         'kaprodi_guru_id',
+        'galeri_kategori_id',
         'is_active',
         'urutan',
     ];
@@ -37,6 +38,11 @@ class Jurusan extends Model
     public function kaprodi(): BelongsTo
     {
         return $this->belongsTo(Guru::class, 'kaprodi_guru_id');
+    }
+
+    public function galeriKategori(): BelongsTo
+    {
+        return $this->belongsTo(GaleriKategori::class, 'galeri_kategori_id');
     }
 
     public function guru(): HasMany
