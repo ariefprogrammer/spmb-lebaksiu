@@ -46,6 +46,7 @@ class Pengaturan extends Page implements HasForms
         'profil_deskripsi',
         'serbaserbi_persentase_terserap',
         'serbaserbi_jumlah_mitra',
+        'template_notifikasi_pendaftaran',
     ];
 
     public ?array $data = [];
@@ -183,6 +184,17 @@ class Pengaturan extends Page implements HasForms
                             ->label('Teks Pengumuman Topbar')
                             ->rows(2)
                             ->helperText('Contoh: "Gelombang 2 resmi dibuka — kuota terbatas!"')
+                            ->columnSpanFull(),
+                    ]),
+                
+                Section::make('Template Notifikasi WhatsApp')
+                    ->description('Pesan yang dikirim admin ke pendaftar lewat tombol "Kirim Notifikasi". Cukup teks biasa; tulis link daftar ulang langsung di dalam teks.')
+                    ->schema([
+                        Textarea::make('template_notifikasi_pendaftaran')
+                            ->label('Template Pesan Pendaftaran Berhasil')
+                            ->rows(8)
+                            ->placeholder("Halo {nama_lengkap}, formulir pendaftaran kamu sudah kami terima dengan nomor {no_pendaftaran}.\n\nSilakan lanjutkan proses daftar ulang melalui https://...")
+                            ->helperText('Placeholder yang tersedia: {nama_lengkap}, {no_pendaftaran}, {asal_sekolah}, {nisn}. Placeholder akan diganti otomatis dengan data pendaftar saat pesan dikirim.')
                             ->columnSpanFull(),
                     ]),
             ])

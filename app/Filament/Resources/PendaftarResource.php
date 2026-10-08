@@ -25,6 +25,7 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Pengaturan;
 
 class PendaftarResource extends Resource
 {
@@ -347,6 +348,13 @@ class PendaftarResource extends Resource
                     ->label('Daftar Ulang')
                     ->boolean(),
 
+                IconColumn::make('notifikasi_terkirim_at')
+                    ->label('Notifikasi')
+                    ->boolean()
+                    ->tooltip(fn (Pendaftar $record) => $record->notifikasi_terkirim_at
+                        ? 'Terkirim ' . $record->notifikasi_terkirim_at->translatedFormat('d M Y H:i')
+                        : 'Belum dikirim'),
+
                 TextColumn::make('created_at')
                     ->label('Tgl Daftar')
                     ->date('d M Y')
@@ -383,8 +391,51 @@ class PendaftarResource extends Resource
                         true: fn ($query) => $query->whereNotNull('daftar_ulang_at'),
                         false: fn ($query) => $query->whereNull('daftar_ulang_at'),
                     ),
+
+                TernaryFilter::make('notifikasi_terkirim_at')
+                    ->label('Status Notifikasi')
+                    ->nullable()
+                    ->trueLabel('Sudah Dikirim')
+                    ->falseLabel('Belum Dikirim')
+                    ->queries(
+                        true: fn ($query) => $query->whereNotNull('notifikasi_terkirim_at'),
+                        false: fn ($query) => $query->whereNull('notifikasi_terkirim_at'),
+                    ),
             ])
             ->actions([
+                Action::make('kirimNotifikasi')
+                    ->label(fn (Pendaftar $record) => $record->notifikasi_terkirim_at ? 'Kirim Ulang Notifikasi' : 'Kirim Notifikasi')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->color(fn (Pendaftar $record) => $record->notifikasi_terkirim_at ? 'warning' : 'success')
+                    ->disabled(fn (Pendaftar $record) => static::urlWhatsappNotifikasi($record) === null)
+                    ->tooltip(fn (Pendaftar $record) => static::urlWhatsappNotifikasi($record) === null
+                        ? 'Template belum diisi di menu Pengaturan, atau nomor WhatsApp siswa kosong'
+                        : null)
+                    ->requiresConfirmation(fn (Pendaftar $record) => filled($record->notifikasi_terkirim_at))
+                    ->modalHeading('Kirim ulang notifikasi?')
+                    ->modalDescription(fn (Pendaftar $record) => $record->notifikasi_terkirim_at
+                        ? 'Notifikasi sudah pernah dikirim pada ' . $record->notifikasi_terkirim_at->translatedFormat('d M Y H:i') . '. Kirim lagi?'
+                        : null)
+                    ->action(function (Pendaftar $record, $livewire) {
+                        $url = static::urlWhatsappNotifikasi($record);
+
+                        if (! $url) {
+                            return;
+                        }
+
+                        $record->update(['notifikasi_terkirim_at' => now()]);
+
+                        $livewire->js('window.open(' . \Illuminate\Support\Js::from($url) . ', "_blank")');
+                    }),
+
+                Action::make('resetNotifikasi')
+                    ->label('Tandai Belum Dikirim')
+                    ->icon('heroicon-o-arrow-uturn-left')
+                    ->color('gray')
+                    ->visible(fn (Pendaftar $record) => filled($record->notifikasi_terkirim_at))
+                    ->requiresConfirmation()
+                    ->modalDescription('Hapus penanda "sudah dikirim" untuk pendaftar ini?')
+                    ->action(fn (Pendaftar $record) => $record->update(['notifikasi_terkirim_at' => null])),
                 Action::make('verifikasiBerkas')
                     ->label('Verifikasi Berkas')
                     ->icon('heroicon-o-document-check')
@@ -492,6 +543,51 @@ class PendaftarResource extends Resource
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
+    }
+
+    protected static function normalisasiNomorWhatsapp(?string $nomor): ?string
+    {
+        $nomor = preg_replace('/\D+/', '', (string) $nomor);
+
+        if ($nomor === '') {
+            return null;
+        }
+
+        if (str_starts_with($nomor, '0')) {
+            return '62' . substr($nomor, 1);
+        }
+
+        if (str_starts_with($nomor, '8')) {
+            return '62' . $nomor;
+        }
+
+        return $nomor;
+    }
+
+    protected static function isiTemplate(string $template, Pendaftar $pendaftar): string
+    {
+        $pendaftar->loadMissing(['jurusan', 'gelombang']);
+
+        return strtr($template, [
+            '{nama_lengkap}' => $pendaftar->nama_lengkap,
+            '{no_pendaftaran}' => $pendaftar->no_pendaftaran,
+            '{asal_sekolah}' => $pendaftar->asal_sekolah,
+            '{nisn}' => $pendaftar->nisn,
+            '{jurusan}' => $pendaftar->jurusan?->nama ?? '',
+            '{gelombang}' => $pendaftar->gelombang?->nama ?? '',
+        ]);
+    }
+
+    public static function urlWhatsappNotifikasi(Pendaftar $pendaftar): ?string
+    {
+        $template = Pengaturan::get('template_notifikasi_pendaftaran');
+        $nomor = static::normalisasiNomorWhatsapp($pendaftar->whatsapp_siswa);
+
+        if (blank($template) || ! $nomor) {
+            return null;
+        }
+
+        return 'https://wa.me/' . $nomor . '?text=' . rawurlencode(static::isiTemplate($template, $pendaftar));
     }
 
     public static function getNavigationBadge(): ?string

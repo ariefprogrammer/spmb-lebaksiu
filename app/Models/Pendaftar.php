@@ -60,6 +60,7 @@ class Pendaftar extends Model
         'catatan_admin',
         'catatan_link',
         'daftar_ulang_at',
+        'notifikasi_terkirim_at',
     ];
 
     protected function casts(): array
@@ -69,6 +70,7 @@ class Pendaftar extends Model
             'anak_ke' => 'integer',
             'punya_kip' => 'boolean',
             'daftar_ulang_at' => 'datetime',
+            'notifikasi_terkirim_at' => 'datetime',
         ];
     }
 
